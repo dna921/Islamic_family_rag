@@ -575,7 +575,7 @@ def interactive_eda_page():
     # Filtered DataFrame
     filtered_df = df[(df['broad_area_clean'] == selected_area) & (df['month'] == selected_month)]
 
-    st.markdown(f"### 📌 Overview for **{selected_area}** in Month **{selected_month}**")
+    st.markdown(f"### 📌 Overview for **{selected_area}**")
 
     # 📦 Hamper Demand by Week of Month
     if 'week_of_month' in filtered_df.columns:
@@ -667,7 +667,6 @@ def interactive_eda_page():
             hole=0.4
         )
         st.plotly_chart(fig_pie)
-    st.image('EDA 1.jpg', caption="Monthly time trend", use_container_width=True)
 
     
 
