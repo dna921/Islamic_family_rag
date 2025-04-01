@@ -37,7 +37,7 @@ def load_rag():
     documents = {
     "doc1": "The Islamic Family is a compassionate, volunteer-driven community initiative dedicated to supporting families in need across Edmonton and surrounding areas. Their mission is to provide essential services such as food hampers, emotional support, and outreach programs to ensure no one is left behind. Rooted in values of care, dignity, and inclusion, the Islamic Family works with diverse partners and volunteers to uplift marginalized communities and build a stronger, more connected society. Learn more at their official website: https://www.islamicfamily.ca",
 
-    "doc2": "Client 101 (Alice, Age 29) picked up a Standard hamper at Downtown on 2023-01-15. ...",
+    "doc2": "Hello! Welcome to the Islamic Family app. How can I help you today?",
 
     "doc3": "The Islamic Family offers a wide range of services designed to uplift individuals and families. These include food hamper distribution, newcomer support, and culturally sensitive counseling. They provide mental health services integrated with Islamic values, family mediation, and wellness programs. For youth, they run The Green Room—a safe space for leadership, creativity, and support. They also offer mentorship through the Mirror program, educational workshops, re-entry support for individuals affected by incarceration, and inclusive community events. These services work together to support healing, empowerment, and belonging across Edmonton. Visit https://www.islamicfamily.ca for full details."
 }
