@@ -427,12 +427,20 @@ def machine_learning_modeling():
         # 📥 User Inputs
         dependents = st.number_input("👨‍👩‍👧 Number of Dependents", min_value=0)
         distance = st.number_input("📍 Distance (km) from center", min_value=0.0)
-        month = st.selectbox("📆 Month", list(range(1, 13)))
+
+        # Month with names
+        month_dict = {
+            "January": 1, "February": 2, "March": 3, "April": 4,
+            "May": 5, "June": 6, "July": 7, "August": 8,
+            "September": 9, "October": 10, "November": 11, "December": 12
+        }
+        month_name = st.selectbox("📆 Month", list(month_dict.keys()))
+        month = month_dict[month_name]
+
         requests = st.number_input("📝 Requests per Household", min_value=0.0)
-        week = st.selectbox("📅 Week of Month", [1, 2, 3, 4])
         avg_size = st.number_input("👥 Average Household Size", min_value=0.0)
 
-        # 📍 Broad Area selection (full list)
+        # 📍 Broad Area selection
         broad_areas = [
             'Londonderry', 'NAIT/Kingway', 'Boyle Street/McCauley', 'Windermere', 'Castle Downs',
             'Northeast Edmonton', 'Clareview', 'Alberta Avenue', 'Mill Woods', 'Blue Quill',
@@ -445,7 +453,7 @@ def machine_learning_modeling():
         broad_area = st.selectbox("🏘️ Broad Area", broad_areas)
         broad_area_encoded = broad_area_mapping[broad_area]
 
-        # 👻 Default socio-economic features (dummy values for now)
+        # 👻 Socio-economic defaults
         input_data = pd.DataFrame([{
             'dependents_qty': dependents,
             'primary_client_key': 0,
@@ -453,7 +461,7 @@ def machine_learning_modeling():
             'distance_km': distance,
             'month': month,
             'requests_per_household': requests,
-            'week_of_month': week,
+            'week_of_month': 1,  # 👈 Defaulted internally
             'Average household size': avg_size,
             'broad_area_encoded': broad_area_encoded,
             'Couple-family households with children': 5265.0,
@@ -464,15 +472,14 @@ def machine_learning_modeling():
             'Total one-parent families': 0
         }])
 
-        # ✅ Ensure correct feature order (must match model exactly)
         expected_columns = [
-    'dependents_qty', 'primary_client_key', 'house_number', 'distance_km', 'month',
-    'requests_per_household', 'week_of_month', 'Average household size', 'broad_area_encoded',
-    'Couple-family households with children', 'Multigenerational households',
-    'One-parent families in which the parent is a man+',
-    'One-parent families in which the parent is a woman+',
-    'Persons not in census families - Living alone', 'Total one-parent families'
-          ]
+            'dependents_qty', 'primary_client_key', 'house_number', 'distance_km', 'month',
+            'requests_per_household', 'week_of_month', 'Average household size', 'broad_area_encoded',
+            'Couple-family households with children', 'Multigenerational households',
+            'One-parent families in which the parent is a man+',
+            'One-parent families in which the parent is a woman+',
+            'Persons not in census families - Living alone', 'Total one-parent families'
+        ]
 
         input_data = input_data[expected_columns]
 
@@ -486,15 +493,29 @@ def machine_learning_modeling():
 
         # 🔮 Make Prediction
         hamper_pred = model.predict(input_data.values)[0]
-
-        # ✅ Display Result
-        # 🔍 Multiply by max value used during model training to rescale
-        max_hamper_value = 100  # Replace this with the actual max hamper demand from your training set
+        max_hamper_value = 100
         hamper_pred = hamper_pred * max_hamper_value
 
         st.success(f"📦 Predicted Hamper Demand: **{int(round(hamper_pred))} hampers**")
 
+        # 📊 Hamper Demand by Week from historical data
+        st.markdown("### 📊 Hamper Demand by Week in Your Selected Area")
 
+        try:
+            df = pd.read_csv("df_merged_backup.csv")
+            df['broad_area_clean'] = df['broad_area'].astype(str).str.strip().str.title()
+
+            filtered_df = df[(df['broad_area_clean'] == broad_area) & (df['month'] == month)]
+
+            if not filtered_df.empty and 'week_of_month' in filtered_df.columns:
+                fig_week = px.bar(filtered_df, x='week_of_month', y='hamper_demand',
+                                  title=f"Hamper Demand by Week - {broad_area} ({month_name})",
+                                  labels={'week_of_month': 'Week of Month', 'hamper_demand': 'Hamper Demand'})
+                st.plotly_chart(fig_week)
+            else:
+                st.info("No weekly data available for this area and month.")
+        except Exception as e:
+            st.error(f"Error loading weekly hamper demand chart: {e}")
 
     except Exception as e:
         st.error(f"❌ Unexpected error: {e}")
