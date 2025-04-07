@@ -37,9 +37,9 @@ def load_rag():
     import gdown
 
     # Download ZIP from Google Drive and extract only once
-    file_id = "1_DCO8nB9mDELuir1DFFzyoYe6zaF9KUU"  # ⬅️ Replace with your actual Google Drive file ID
-    zip_path = "local_model.zip"
-    model_dir = "local_model"
+    file_id = "15R2YseZRUZgSPQ-lezhZJNi7xpkHccpd"  # ⬅️ Replace with your actual Google Drive file ID
+    zip_path = "local_models.zip"
+    model_dir = "local_models"
 
     if not os.path.exists(model_dir):
         url = f"https://drive.google.com/uc?id={file_id}"
