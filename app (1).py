@@ -33,9 +33,27 @@ broad_area_mapping = {area: idx for idx, area in enumerate(broad_areas)}
 @st.cache_resource
 
 def load_rag():
-    
-    embedder = SentenceTransformer('all-MiniLM-L6-v2')
+    import zipfile
+    import gdown
+
+    # Download ZIP from Google Drive and extract only once
+    file_id = "1_DCO8nB9mDELuir1DFFzyoYe6zaF9KUU"  # ⬅️ Replace with your actual Google Drive file ID
+    zip_path = "local_model.zip"
+    model_dir = "local_model"
+
+    if not os.path.exists(model_dir):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, zip_path, quiet=False)
+
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(model_dir)
+        os.remove(zip_path)
+
+    # Load model from extracted local folder
+    embedder = SentenceTransformer(model_dir)
     generator = pipeline("text2text-generation", model="google/flan-t5-base")
+
+
     documents = {
     "doc1": "The Islamic Family is a compassionate, volunteer-driven community initiative dedicated to supporting families in need across Edmonton and surrounding areas. Their mission is to provide essential services such as food hampers, emotional support, and outreach programs to ensure no one is left behind. Rooted in values of care, dignity, and inclusion, the Islamic Family works with diverse partners and volunteers to uplift marginalized communities and build a stronger, more connected society. Learn more at their official website: https://www.islamicfamily.ca",
 
