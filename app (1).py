@@ -32,7 +32,7 @@ broad_area_mapping = {area: idx for idx, area in enumerate(broad_areas)}
 # -------------------------------
 @st.cache_resource
 def load_rag():
-    embedder = SentenceTransformer('all-MiniLM-L6-v2')
+    embedder = SentenceTransformer('paraphrase-MiniLM-L6-v2')
     generator = pipeline("text2text-generation", model="google/flan-t5-base")
     documents = {
     "doc1": "The Islamic Family is a compassionate, volunteer-driven community initiative dedicated to supporting families in need across Edmonton and surrounding areas. Their mission is to provide essential services such as food hampers, emotional support, and outreach programs to ensure no one is left behind. Rooted in values of care, dignity, and inclusion, the Islamic Family works with diverse partners and volunteers to uplift marginalized communities and build a stronger, more connected society. Learn more at their official website: https://www.islamicfamily.ca",
