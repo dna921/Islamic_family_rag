@@ -31,6 +31,9 @@ broad_area_mapping = {area: idx for idx, area in enumerate(broad_areas)}
 # Load RAG components
 # -------------------------------
 @st.cache_resource
+import os
+os.environ["HUGGINGFACEHUB_API_TOKEN"] = st.secrets["HUGGINGFACEHUB_API_TOKEN"]
+
 def load_rag():
     embedder = SentenceTransformer('all-MiniLM-L6-v2')
     generator = pipeline("text2text-generation", model="google/flan-t5-base")
